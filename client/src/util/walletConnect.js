@@ -1,0 +1,56 @@
+import WalletConnect from "@walletconnect/browser";
+import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
+// Create a walletConnector
+
+const walletConnector = new WalletConnect({
+  bridge: "https://bridge.walletconnect.org" // Required
+});
+
+// Check if connection is already established
+if (!walletConnector.connected) {
+  // create new session
+  walletConnector.createSession().then(() => {
+    // get uri for QR Code modal
+    const uri = walletConnector.uri;
+    // display QR Code modal
+    WalletConnectQRCodeModal.open(uri, () => {
+      console.log("QR Code Modal closed");
+    });
+  });
+} else {
+  // walletConnector.killSession();
+  console.log ("already connected")
+}
+// Subscribe to connection events
+walletConnector.on("connect", (error, payload) => {
+  console.log ("connected!");
+  // console.log (payload);
+  // console.log (payload.params[0].accounts[0]);
+  // console.log (payload.params[0].chainId);
+
+  if (error) {
+    throw error;
+  }
+  // Close QR Code Modal
+  WalletConnectQRCodeModal.close();
+
+  // Get provided accounts and chainId
+  const { accounts, chainId } = payload.params[0];
+});
+walletConnector.on("session_update", (error, payload) => {
+  if (error) {
+    throw error;
+  }
+
+  // Get updated accounts and chainId
+  const { accounts, chainId } = payload.params[0];
+});
+
+walletConnector.on("disconnect", (error, payload) => {
+  if (error) {
+    throw error;
+  }
+  // Delete walletConnector
+});
+
+export default walletConnector;
