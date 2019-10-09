@@ -41,7 +41,19 @@
 </template>
 
 <script>
-import getWeb3 from '../src/util/web3';
+import Portis from '@portis/web3';
+import Web3 from 'web3';
+const customNode = {
+  nodeUrl: 'https://testnet2.matic.network'
+};
+
+const portis = new Portis(
+  "15f0ec32-f562-45d6-b3bd-1880c2fd5b74",
+  customNode
+);
+
+const web3p = new Web3(portis.provider);
+
 import ERC20abi from '../src/util/ERC20abi';
 import ERC721abi from '../src/util/ERC721abi';
 
@@ -53,7 +65,7 @@ export default {
   data() {
     return {
 
-      web3: null,
+      web3: web3p,
       account: null,
       netId: null,
 
@@ -74,13 +86,13 @@ export default {
     };
   },
   mounted() {
-    getWeb3().then((result) => {
-      this.web3 = result;
+    // getWeb3().then((result) => {
+      // this.web3 = result;
       this.ERC20Instance = new this.web3.eth.Contract(ERC20abi, ERC20Address);
       this.ERC721Instance = new this.web3.eth.Contract(ERC721abi, ERC721Address);
       
       this.init ();
-    });
+    // });
   },
   components: {
     
@@ -89,7 +101,6 @@ export default {
     init () {
       this.web3.eth.getAccounts().then((accounts) => {
         this.account = accounts[0];
-        // this.ERC721Instance.methods.isMinter(this.account).call().then((res) => console.log (res))
       })
       this.web3.eth.net.getId().then((id) => this.netId = id)
 
