@@ -1,0 +1,89 @@
+Compiling your contracts...
+===========================
+> Everything is up to date, there is nothing to compile.
+
+
+
+Starting migrations...
+======================
+> Network name:    'maticTestnet'
+> Network id:      8995
+> Block gas limit: 0x7a1200
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0x176ab7a1a5d87aafdcddf14a42b8fd77854505e98a8e9affd0aed704e385a856
+   > Blocks: 2            Seconds: 5
+   > contract address:    0xEDcfDd2c5157E7f184D691927ceAebC2e241480f
+   > block number:        8665609
+   > block timestamp:     1570599152
+   > account:             0x9fB29AAc15b9A4B7F17c3385939b007540f4d791
+   > balance:             0.000021
+   > gas used:            261393
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 2 (block: 8665613)
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+2_deploy_contracts.js
+=====================
+
+   Replacing 'BasicERC20'
+   ----------------------
+   > transaction hash:    0x3be225fc339e63d6d1da96963e9c6ce7b7624bbe4d539da11661af7aa0d80e2c
+   > Blocks: 0            Seconds: 0
+   > contract address:    0x8aC19D9003307d6a3772ed19d8a62cd6F4a9f2c4
+   > block number:        8665620
+   > block timestamp:     1570599174
+   > account:             0x9fB29AAc15b9A4B7F17c3385939b007540f4d791
+   > balance:             0.000021
+   > gas used:            1347113
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 2 (block: 8665624)
+
+   Replacing 'BasicERC721'
+   -----------------------
+   > transaction hash:    0xefc0bdaf38d6f2a94b7f799cba5b9d5121d82cf624c4c6eed0422b07ad49c586
+   > Blocks: 2            Seconds: 5
+   > contract address:    0x99cB8b63aEfDC050694Ebb2957eFeaCed38dD54f
+   > block number:        8665629
+   > block timestamp:     1570599192
+   > account:             0x9fB29AAc15b9A4B7F17c3385939b007540f4d791
+   > balance:             0.000021
+   > gas used:            3242502
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 3 (block: 8665634)
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+Summary
+=======
+> Total deployments:   3
+> Final cost:          0 ETH
