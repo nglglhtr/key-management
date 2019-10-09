@@ -1,42 +1,96 @@
 <template>
-  <div id="app">
+
+  <div>
+    
+<div id = "app">
+    <hr>
     <p>Connected Account: {{ account }}</p>
     <p>Connected to Network (id): {{ netId }} </p>
-    <h3>ERC20</h3>
+    <p>Contracts deployed by: {{ deployedBy }} </p>
+    <hr>
+
+    <div class="columns">
+      <div class="column">
+        <h3><b>ERC20</b></h3>
     <p>ERC20 Contract Address: {{ ERC20Address }} </p>
     <p>ERC20 token name: {{ ERC20Name }} </p>
     <p>ERC20 token symbol: {{ ERC20Symbol }} </p>
     <p>ERC20 decimals: {{ ERC20Decimals }} </p>        
     <p>ERC20 total supply: {{ ERC20TotalSupply }} </p>
+    <hr>
     <div>
-      <!-- <form> -->
-      <input type="text" placeholder="address" id = "transferAddressErc20">
-      <input type="text" placeholder="amount" id = "transferAmountErc20">      
-      <button v-on:click="transferErc20">Transfer-erc20</button>
-      <br>
-      <input type="text" placeholder="address" id = "checkBalanceErc20">
-        <button v-on:click="checkBalanceErc20">checkBalance-erc20</button>
-      <!-- </form> -->
+        <h3><b>Transfer ERC20</b></h3>
+
+      <div class = "columns">
+        <div class = "column">
+            <b-input placeholder="address" id = "transferAddressErc20"></b-input>
+        </div>
+        <div class = "column">
+            <b-input placeholder="amount" id = "transferAmountErc20"></b-input>
+        </div>
+        <div class = "column">
+          <b-button v-on:click="transferErc20">Transfer-erc20</b-button>
+        </div>
+      </div>
+      <hr>
+        <h3><b>Check Balance ERC20</b></h3>
+      <div class = "columns">
+      <div class = "column">
+      <b-input type="text" placeholder="address" id = "checkBalanceErc20"></b-input>
+      </div>
+      <div class = "column">
+        <b-button v-on:click="checkBalanceErc20">checkBalance-erc20</b-button>
+      </div>
+      </div>
     </div>
-    <h3>ERC721</h3>
+      </div>
+      <div class="column">
+        <h3><b>ERC721</b></h3>
     <p>ERC721 Contract Address: {{ ERC721Address }} </p>
     <p>ERC721 token name: {{ ERC721Name }} </p>
     <p>ERC721 token symbol: {{ ERC721Symbol }} </p>
     <p>ERC721 total supply: {{ ERC721TotalSupply }} </p>
-    <p> {{ boool }} </p>
-    <!-- <form> -->
-      <input type="text" placeholder="address" id = "mintAddressErc721">
-      <input type="text" placeholder="tokenId" id = "mintTokenIdErc721">  
-      <button v-on:click="mintErc721">mint-erc721</button>
-      <br>
-      <input type="text" placeholder="address" id = "transferAddressErc721">
-      <input type="text" placeholder="tokenId" id = "transferTokenIdErc721">      
-      <button v-on:click="transferErc721">Transfer-erc721</button>
-      <br>
-      <input type="text" placeholder="address" id = "ownerOfErc721">
-      <button v-on:click="checkOwnerErc721">ownerof-erc721</button>
-    <!-- </form> -->
-    
+    <br>
+    <hr>
+    <h3><b>Mint ERC721</b></h3>
+    <div class = "columns">
+      <div class = "column">
+        <b-input type="text" placeholder="address" id = "mintAddressErc721"> </b-input>      
+      </div>
+      <div class = "column">
+        <b-input type="text" placeholder="tokenId" id = "mintTokenIdErc721"> </b-input>
+      </div>
+      <div class = "column">
+        <b-button v-on:click="mintErc721">mint-erc721</b-button>        
+      </div>
+    </div>
+      <hr>
+    <h3><b>Transfer ERC721</b></h3>      
+      <div class = "columns">
+      <div class = "column">
+      <b-input type="text" placeholder="address" id = "transferAddressErc721"> </b-input>
+      </div>
+      <div class = "column">
+      <b-input type="text" placeholder="tokenId" id = "transferTokenIdErc721">   </b-input>   
+      </div>
+      <div class = "column">
+      <b-button v-on:click="transferErc721">Transfer-erc721</b-button>
+      </div>
+      </div>
+      <hr>
+    <h3><b>Owner of ERC721</b></h3>      
+      <div class = "columns">
+      <div class = "column">
+      <b-input type="text" placeholder="address" id = "ownerOfErc721"> </b-input>     
+      </div>
+      <div class = "column">
+      <b-button v-on:click="checkOwnerErc721">ownerof-erc721</b-button>      
+      </div>
+      </div>
+      </div>
+    </div>
+    <hr>
+</div>
   </div>
 </template>
 
@@ -47,6 +101,7 @@ import ERC721abi from '../src/util/ERC721abi';
 
 const ERC20Address = '0x8aC19D9003307d6a3772ed19d8a62cd6F4a9f2c4';
 const ERC721Address = '0x99cB8b63aEfDC050694Ebb2957eFeaCed38dD54f';
+const deployedBy = '0x9fB29AAc15b9A4B7F17c3385939b007540f4d791';
 
 export default {
   name: 'app',
@@ -70,7 +125,7 @@ export default {
       ERC721Symbol: null,
       ERC721TotalSupply: null,
 
-      boool: null,   
+      deployedBy,   
     };
   },
   mounted() {
@@ -154,5 +209,7 @@ export default {
 
 
 <style>
-
+#app {
+  margin: 40px;
+}
 </style>
