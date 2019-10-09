@@ -1,43 +1,5 @@
 <template>
-  <div id="app">
-    <p>Connected Account: {{ account }}</p>
-    <p>Connected to Network (id): {{ netId }} </p>
-    <h3>ERC20</h3>
-    <p>ERC20 Contract Address: {{ ERC20Address }} </p>
-    <p>ERC20 token name: {{ ERC20Name }} </p>
-    <p>ERC20 token symbol: {{ ERC20Symbol }} </p>
-    <p>ERC20 decimals: {{ ERC20Decimals }} </p>        
-    <p>ERC20 total supply: {{ ERC20TotalSupply }} </p>
-    <div>
-      <!-- <form> -->
-      <input type="text" placeholder="address" id = "transferAddressErc20">
-      <input type="text" placeholder="amount" id = "transferAmountErc20">      
-      <button v-on:click="transferErc20">Transfer-erc20</button>
-      <br>
-      <input type="text" placeholder="address" id = "checkBalanceErc20">
-        <button v-on:click="checkBalanceErc20">checkBalance-erc20</button>
-      <!-- </form> -->
-    </div>
-    <h3>ERC721</h3>
-    <p>ERC721 Contract Address: {{ ERC721Address }} </p>
-    <p>ERC721 token name: {{ ERC721Name }} </p>
-    <p>ERC721 token symbol: {{ ERC721Symbol }} </p>
-    <p>ERC721 total supply: {{ ERC721TotalSupply }} </p>
-    <p> {{ boool }} </p>
-    <!-- <form> -->
-      <input type="text" placeholder="address" id = "mintAddressErc721">
-      <input type="text" placeholder="tokenId" id = "mintTokenIdErc721">  
-      <button v-on:click="mintErc721">mint-erc721</button>
-      <br>
-      <input type="text" placeholder="address" id = "transferAddressErc721">
-      <input type="text" placeholder="tokenId" id = "transferTokenIdErc721">      
-      <button v-on:click="transferErc721">Transfer-erc721</button>
-      <br>
-      <input type="text" placeholder="address" id = "ownerOfErc721">
-      <button v-on:click="checkOwnerErc721">ownerof-erc721</button>
-    <!-- </form> -->
-    
-  </div>
+  
 </template>
 
 <script>
