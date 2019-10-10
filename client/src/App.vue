@@ -5,7 +5,7 @@
     <hr>
     <p>Connected Account: {{ account }}</p>
     <p>Connected to Network (id): {{ netId }} </p>
-    <p>Contracts deployed by: {{ deployedBy }} </p>
+    <!-- <p>Contracts deployed by: {{ deployedBy }} </p> -->
     <hr>
 
     <div class="columns">
@@ -18,6 +18,17 @@
     <p>ERC20 total supply: {{ ERC20TotalSupply }} </p>
     <hr>
     <div>
+      <h3><b>Mint ERC20</b></h3>
+
+      <div class = "columns">
+        <div class = "column">
+            <b-input placeholder="amount" id = "mintAmountErc20"></b-input>
+        </div>
+        <div class = "column">
+          <b-button v-on:click="mintErc20">Mint-erc20</b-button>
+        </div>
+      </div>
+      <hr>
         <h3><b>Transfer ERC20</b></h3>
 
       <div class = "columns">
@@ -53,9 +64,6 @@
     <hr>
     <h3><b>Mint ERC721</b></h3>
     <div class = "columns">
-      <div class = "column">
-        <b-input type="text" placeholder="address" id = "mintAddressErc721"> </b-input>      
-      </div>
       <div class = "column">
         <b-input type="text" placeholder="tokenId" id = "mintTokenIdErc721"> </b-input>
       </div>
@@ -97,7 +105,8 @@
 import Portis from '@portis/web3';
 import Web3 from 'web3';
 const customNode = {
-  nodeUrl: 'https://testnet2.matic.network'
+  nodeUrl: 'https://testnet2.matic.network',
+  gasPrice: 0
 };
 
 const portis = new Portis(
@@ -110,8 +119,8 @@ const web3p = new Web3(portis.provider);
 import ERC20abi from '../src/util/ERC20abi';
 import ERC721abi from '../src/util/ERC721abi';
 
-const ERC20Address = '0x8aC19D9003307d6a3772ed19d8a62cd6F4a9f2c4';
-const ERC721Address = '0x99cB8b63aEfDC050694Ebb2957eFeaCed38dD54f';
+const ERC20Address = '0xe28c057F7a7b7450B01Bda93a0e8193cDeA033fE';
+const ERC721Address = '0x74A090B40eDe534c557295e90A35a7305E7c45c0';
 
 export default {
   name: 'app',
@@ -167,6 +176,14 @@ export default {
       this.ERC721Instance.methods.totalSupply().call().then((res) => this.ERC721TotalSupply = res)
 
     },
+    mintErc20 () {
+      let amount = mintAmountErc20.value;
+
+      this.ERC20Instance.methods.mintTokens (amount).send ({
+        from: this.account,
+        gasPrice: 0
+      }).then((receipt) => console.log (receipt));
+    },
     transferErc20() {
       let address = transferAddressErc20.value;
       let amount = transferAmountErc20.value;
@@ -184,14 +201,14 @@ export default {
       })
     },
     mintErc721(){ 
-      let address = mintAddressErc721.value;
+      // let address = mintAddressErc721.value;
       let tokenId = mintTokenIdErc721.value;
-      let account = this.account;
-      console.log ("sending from: ", account);
-      console.log ("tokenId: ", tokenId);
-      console.log ("sending to: ", address);
 
-      this.ERC721Instance.methods.mint(address,tokenId).send ({
+      // console.log ("sending from: ", account);
+      console.log ("tokenId: ", tokenId);
+      // console.log ("sending to: ", address);
+
+      this.ERC721Instance.methods.mintToken(tokenId).send ({
         from: this.account,
         gasPrice: 0
       }).then((receipt) => {
@@ -218,5 +235,7 @@ export default {
 
 
 <style>
-
+#app {
+  margin: 40px;
+}
 </style>
