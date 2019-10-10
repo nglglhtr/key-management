@@ -5,7 +5,6 @@
     <hr>
     <p>Connected Account: {{ account }}</p>
     <p>Connected to Network (id): {{ netId }} </p>
-    <!-- <p>Contracts deployed by: {{ deployedBy }} </p> -->
     <hr>
 
     <div class="columns">
