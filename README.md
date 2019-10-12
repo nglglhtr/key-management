@@ -27,5 +27,5 @@ The repository demonstrates token functions (ERC721/ERC20 - minting, transfer, c
         git checkout portis
         ```
 4.  ```
-    npm run serve
+    cd client && npm run serve
     ```
