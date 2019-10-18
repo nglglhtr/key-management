@@ -104,10 +104,50 @@
 // import getWeb3 from '../src/util/web3';
 import ERC20abi from '../src/util/ERC20abi';
 import ERC721abi from '../src/util/ERC721abi';
-import Web3 from 'web3';
-var web3m = new Web3(`https://testnet2.matic.network`);
-import walletConnector from '../src/util/walletConnect';
 
+import WalletConnectProvider from "@maticnetwork/walletconnect-provider"
+import Web3 from "web3"
+import Matic from "maticjs"
+
+const maticProvider = new WalletConnectProvider({
+      host: `https://testnet2.matic.network`,
+      callbacks: {
+        onConnect: console.log('connected'),
+        onDisconnect: console.log('disconnected!')
+      }
+    })
+
+const ropstenProvider = new WalletConnectProvider({
+      host: `https://ropsten.infura.io/v3/70645f042c3a409599c60f96f6dd9fbc`,
+      callbacks: {
+        onConnect: console.log('connected'),
+        onDisconnect: console.log('disconnected')
+      }
+})
+
+console.log (ropstenProvider);
+console.log (maticProvider)
+
+const maticWeb3 = new Web3(maticProvider)
+console.log (maticWeb3)
+const ropstenWeb3 = new Web3(ropstenProvider)
+    
+const maticObj = new Matic({
+  maticProvider: maticProvider,
+  parentProvider: ropstenProvider,
+  rootChainAddress: "0x60e2b19b9a87a3f37827f2c8c8306be718a5f9b4",
+  withdrawManagerAddress: "0x4ef2b60cdd4611fa0bc815792acc14de4c158d22",
+  depositManagerAddress: "0x4072fab2a132bf98207cbfcd2c341adb904a67e9",
+  syncerUrl: "https://matic-syncer2.api.matic.network/api/v1",
+  watcherUrl: "https://ropsten-watcher2.api.matic.network/api/v1",
+  maticWethAddress: "0x31074c34a757a4b9FC45169C58068F43B717b2D0"
+})
+
+// import Web3 from 'web3';
+// var web3m = new Web3(`https://testnet2.matic.network`);
+// import walletConnector from '../src/util/walletConnect';
+
+// const maticProvider = `https://testnet2.matic.network`;
 const ERC20Address = '0xe28c057F7a7b7450B01Bda93a0e8193cDeA033fE';
 const ERC721Address = '0x74A090B40eDe534c557295e90A35a7305E7c45c0';
 
@@ -115,11 +155,14 @@ export default {
   name: 'app',
   data() {
     return {
-      maticProvider:null,
-      matic: null,
+      // maticProvider:null,
+      // ropstenProvider: null,
+      // maticObj: null,
+
+      // matic: null,
       account: null,
       netId: null,
-      web3: web3m,
+      // web3: web3m,
       ERC20Instance: null,
       ERC20Address,
       ERC20Name: null,
@@ -133,21 +176,30 @@ export default {
       ERC721Symbol: null,
       ERC721TotalSupply: null,
 
-      boool: null,   
+      // boool: null,   
     };
   },
   mounted() {
-    console.log (walletConnector);
-    this.account = walletConnector.accounts[0];
-    this.netId = walletConnector.chainId;
 
-    this.ERC20Instance = new this.web3.eth.Contract(ERC20abi, ERC20Address);
+    
+
+    
+    // console.log (walletConnector);
+    // this.account = walletConnector.accounts[0];
+    // this.netId = walletConnector.chainId;
+    maticWeb3.eth
+      .getAccounts()
+      .then(accounts => {
+        // set address
+        this.account = accounts[0]
+      })
+
+    this.ERC20Instance = new maticWeb3.eth.Contract(ERC20abi, ERC20Address);
     console.log ("erc20instance", this.ERC20Instance);
-    this.ERC721Instance = new this.web3.eth.Contract(ERC721abi, ERC721Address);
+    this.ERC721Instance = new maticWeb3.eth.Contract(ERC721abi, ERC721Address);
     console.log ("erc721instance", this.ERC721Instance);
 
     this.init();
-    
   },
   components: {
     
@@ -164,108 +216,96 @@ export default {
     },
     mintErc20 () {
       let amount = mintAmountErc20.value;
-      let functionSig = '97304ced';
-
-      let firstArg = Web3.utils.padLeft (Web3.utils.toHex(amount).substring(2), 64);
-      let txData = '0x' + functionSig + firstArg;
-
-      let signedTx;
-
-      walletConnector.signTransaction({
-        from: this.account,
-        to: ERC20Address,
+      console.log (this.ERC20Instance.methods.mintTokens(amount).encodeABI());
+      const tx = {
+        from: this.account, // Required
+        to: ERC20Address, // Required (for non contract deployments)
         gas: 800000,
         gasPrice: 0,
-        data: txData,
-      }).then((tx) => {
-        this.web3.eth.sendSignedTransaction(tx).then((receipt)=> console.log (receipt))
+        data: this.ERC20Instance.methods.mintTokens(amount).encodeABI(), // Required
+        gasPrice: "0x0", // Required
+      }
+      maticWeb3.eth.signTransaction(tx).then((result) => {
+        console.log ("sending from: ", this.account);
+        maticWeb3.eth.sendSignedTransaction(result).then((receipt)=> console.log (receipt))
       })
     },
 
     transferErc20() {
-      let address = transferAddressErc20.value;
-      let amount = transferAmountErc20.value;
+      // let address = transferAddressErc20.value;
+      // let amount = transferAmountErc20.value;
       
-      let functionSig = 'a9059cbb';
-      let firstArg = Web3.utils.padLeft(address, 64);
-      let secondArg = Web3.utils.padLeft (Web3.utils.toHex(amount).substring(2), 64);
-      let txData = '0x' + functionSig + firstArg + secondArg;
+      // let functionSig = 'a9059cbb';
+      // let firstArg = Web3.utils.padLeft(address, 64);
+      // let secondArg = Web3.utils.padLeft (Web3.utils.toHex(amount).substring(2), 64);
+      // let txData = '0x' + functionSig + firstArg + secondArg;
 
-      walletConnector.signTransaction({
-        from: this.account,
-        to: ERC20Address,
-        gas: 800000,
-        gasPrice: 0,
-        data: txData,
-      }).then((tx) => {
-        this.web3.eth.sendSignedTransaction(tx).then((receipt)=> console.log (receipt))
-      })
+      // walletConnector.signTransaction({
+      //   from: this.account,
+      //   to: ERC20Address,
+      //   gas: 800000,
+      //   gasPrice: 0,
+      //   data: txData,
+      // }).then((tx) => {
+      //   this.web3.eth.sendSignedTransaction(tx).then((receipt)=> console.log (receipt))
+      // })
 
     },
     checkBalanceErc20() {
-      let address = checkBalanceErc20.value;
-      let functionSig = '70a08231';
-      let firstArg = Web3.utils.padLeft(address, 64);
+      // let address = checkBalanceErc20.value;
+      // let functionSig = '70a08231';
+      // let firstArg = Web3.utils.padLeft(address, 64);
 
-      this.ERC20Instance.methods.balanceOf(address).call ().then((balance) => {
-        console.log (balance);
-      })
+      // this.ERC20Instance.methods.balanceOf(address).call ().then((balance) => {
+      //   console.log (balance);
+      // })
     },
     mintErc721(){ 
-      // let address = mintAddressErc721.value;
-      let tokenId = mintTokenIdErc721.value;
-      // let account = this.account;
+      // let tokenId = mintTokenIdErc721.value;
 
-      // console.log ("sending from: ", account);
-      // console.log ("tokenId: ", tokenId);
-      // console.log ("sending to: ", address);
-
-      let functionSig = 'c634d032';
-      // let firstArg = Web3.utils.padLeft(address, 64);
-      let secondArg = Web3.utils.padLeft(Web3.utils.toHex(tokenId).substring(2), 64);
-      let txData = '0x' + functionSig + secondArg;
-      walletConnector.signTransaction({
-        from: this.account,
-        to: ERC721Address,
-        gas: 800000,
-        gasPrice: 0,
-        data: txData,
-      }).then((tx) => {
-        this.web3.eth.sendSignedTransaction(tx).then((receipt)=> console.log (receipt))
-      })
+      // let functionSig = 'c634d032';
+      // let secondArg = Web3.utils.padLeft(Web3.utils.toHex(tokenId).substring(2), 64);
+      // let txData = '0x' + functionSig + secondArg;
+      // walletConnector.signTransaction({
+      //   from: this.account,
+      //   to: ERC721Address,
+      //   gas: 800000,
+      //   gasPrice: 0,
+      //   data: txData,
+      // }).then((tx) => {
+      //   this.web3.eth.sendSignedTransaction(tx).then((receipt)=> console.log (receipt))
+      // })
 
 
 
     },
     transferErc721(){
-      let from = this.account;
-      let to = transferAddressErc721.value;
-      let tokenId = transferTokenIdErc721.value;
+      // let from = this.account;
+      // let to = transferAddressErc721.value;
+      // let tokenId = transferTokenIdErc721.value;
 
-      let functionSig = '23b872dd' ;
-      let firstArg = Web3.utils.padLeft(from, 64);
-      let secondArg = Web3.utils.padLeft(to, 64);
-      let thirdArg = Web3.utils.padLeft(Web3.utils.toHex(tokenId).substring(2), 64);
+      // let functionSig = '23b872dd' ;
+      // let firstArg = Web3.utils.padLeft(from, 64);
+      // let secondArg = Web3.utils.padLeft(to, 64);
+      // let thirdArg = Web3.utils.padLeft(Web3.utils.toHex(tokenId).substring(2), 64);
       
-      console.log (thirdArg);
-      let txData = '0x' + functionSig + firstArg + secondArg + thirdArg;
+      // console.log (thirdArg);
+      // let txData = '0x' + functionSig + firstArg + secondArg + thirdArg;
 
-      walletConnector.signTransaction({
-        from: this.account,
-        to: ERC20Address,
-        gas: 800000,
-        gasPrice: 0,
-        data: txData,
-      }).then((tx) => {
-        this.web3.eth.sendSignedTransaction(tx).then((receipt)=> console.log (receipt))
-      })
+      // walletConnector.signTransaction({
+      //   from: this.account,
+      //   to: ERC20Address,
+      //   gas: 800000,
+      //   gasPrice: 0,
+      //   data: txData,
+      // }).then((tx) => {
+      //   this.web3.eth.sendSignedTransaction(tx).then((receipt)=> console.log (receipt))
+      // })
 
 
     },
     checkOwnerErc721(){
-      let tokenId = ownerOfErc721.value;
-
-      this.ERC721Instance.methods.ownerOf(tokenId).call().then((add) => console.log (add))
+      // let tokenId = ownerOfErc721.value;(tokenId).call().then((add) => console.log (add))
     }
   }
 }
