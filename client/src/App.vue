@@ -106,6 +106,8 @@
 import getWeb3 from '../src/util/web3';
 import ERC20abi from '../src/util/ERC20abi';
 import ERC721abi from '../src/util/ERC721abi';
+import Matic from 'maticjs';
+import config from '../src/util/config';
 
 const ERC20Address = '0xe28c057F7a7b7450B01Bda93a0e8193cDeA033fE';
 const ERC721Address = '0x74A090B40eDe534c557295e90A35a7305E7c45c0';
@@ -114,7 +116,7 @@ export default {
   name: 'app',
   data() {
     return {
-
+      matic: null,
       web3: null,
       account: null,
       netId: null,
@@ -162,7 +164,19 @@ export default {
       this.ERC721Instance.methods.name().call().then((s) => this.ERC721Name = s)
       this.ERC721Instance.methods.symbol().call().then((s) => this.ERC721Symbol = s)
       this.ERC721Instance.methods.totalSupply().call().then((res) => this.ERC721TotalSupply = res)
-
+      this.initMatic();
+    },
+    initMatic() {
+      this.matic = new Matic({
+        maticProvider: this.web3,
+        parentProvider: this.web3,
+        rootChainAddress: config.ROOTCHAIN_ADDRESS,
+        syncerUrl: config.SYNCER_URL,
+        watcherUrl: config.WATCHER_URL,
+      })
+      // this.matic.web3 = this.web3;
+      // this.matic.wallet = 
+      console.log (this.matic)
     },
     mintErc20 () {
       let amount = mintAmountErc20.value;
@@ -175,12 +189,23 @@ export default {
     transferErc20() {
       let address = transferAddressErc20.value;
       let amount = transferAmountErc20.value;
-      this.ERC20Instance.methods.transfer(address,amount).send({
-        from:this.account,
-        gasPrice: 0
-      }).then ((receipt) => {
-        console.log (receipt)
+
+      let from = this.account;
+      this.matic.transferTokens (ERC20Address, address, amount, {
+        from,
+        gasLimit: 800000,
+        gasPrice: 0,
+        onTransactionHash: (hash) => {
+            // action on Transaction success
+            console.log(hash) // eslint-disable-line
+        },
       })
+      // this.ERC20Instance.methods.transfer(address,amount).send({
+      //   from:this.account,
+      //   gasPrice: 0
+      // }).then ((receipt) => {
+      //   console.log (receipt)
+      // })
     },
     checkBalanceErc20() {
       let address = checkBalanceErc20.value;
